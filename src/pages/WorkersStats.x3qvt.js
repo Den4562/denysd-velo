@@ -3,9 +3,7 @@ import wixData from "wix-data";
 $w.onReady(function () {
   loadWorkers();
 
-  // Обработчик для кнопки Submit
   $w("#button16").onClick(() => {
-    // Собираем данные из формы
     const newWorker = {
       firstName: $w("#inpFirstName").value,
       lastName: $w("#inpLastName").value,
@@ -13,38 +11,46 @@ $w.onReady(function () {
       position: $w("#inpPosition").value,
       hoursPerMonth: Number($w("#inpHoursPerMonth").value),
       hourlyRate: Number($w("#inpHourlyRate").value),
-      hireDate: $w("#inpHireDate").value
-        ? new Date($w("#inpHireDate").value)
-        : new Date(), // Если дата пустая, ставим текущую
+      hireDate: new Date($w("#inpHireDate").value),
     };
 
-    console.log("Добавляем сотрудника:", newWorker); // Логируем данные перед отправкой
-
-    // Добавляем новую запись в коллекцию Worker
     wixData
       .insert("Worker", newWorker)
       .then(() => {
-        console.log("Сотрудник успешно добавлен!");
-        loadWorkers(); // Обновляем таблицу
+        loadWorkers();
 
-        // Очищаем поля формы
         $w("#inpFirstName").value = "";
         $w("#inpLastName").value = "";
         $w("#inpAge").value = "";
         $w("#inpPosition").value = "";
         $w("#inpHoursPerMonth").value = "";
         $w("#inpHourlyRate").value = "";
-        // $w("#inpHireDate").value = "";
+        $w("#inpHireDate").value = null;
       })
       .catch((err) => {
         console.error("Ошибка добавления сотрудника:", err);
       });
   });
+
+  $w("#buttonSortByDate").onClick(() => {
+    loadWorkers("hireDate", "desc");
+  });
+
+  $w("#buttonSortByAge").onClick(() => {
+    loadWorkers("age", "asc");
+  });
 });
 
-function loadWorkers() {
-  wixData
-    .query("Worker")
+function loadWorkers(sortField = "hireDate", sortOrder = "desc") {
+  let query = wixData.query("Worker");
+
+  if (sortOrder === "asc") {
+    query = query.ascending(sortField);
+  } else {
+    query = query.descending(sortField);
+  }
+
+  query
     .find()
     .then((results) => {
       $w("#table1").rows = results.items;
