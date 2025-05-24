@@ -36,10 +36,10 @@ $w.onReady(function () {
     loadWorkers("age", "asc");
   });
 
-  // Пошук працівників  за ім'ям, прізвищем або посадою
+  // Пошук працівників за ім'ям, прізвищем або посадою
   $w("#inpSearch").onInput((event) => {
     const searchValue = $w("#inpSearch").value.trim();
-    loadWorkers("hireDate", "desc", searchValue);
+    loadWorkers("", "", searchValue);
   });
 
   // Оновлення даних вибраного працівника (години на місяць та погодинна ставка)
@@ -50,7 +50,6 @@ $w.onReady(function () {
     const hoursRateValue = $w("#hoursRate").value.trim();
     let hasUpdates = false;
 
-    // Оновлення годин на місяць, якщо значення введено
     if (hoursMonthValue !== "") {
       const newHours = Number(hoursMonthValue);
       if (!isNaN(newHours)) {
@@ -59,7 +58,6 @@ $w.onReady(function () {
       }
     }
 
-    // Оновлення погодинної ставки, якщо значення введено
     if (hoursRateValue !== "") {
       const newHourlyRate = Number(hoursRateValue);
       if (!isNaN(newHourlyRate)) {
@@ -79,23 +77,19 @@ $w.onReady(function () {
   });
 });
 
+// Змінна для зберігання даних вибраного рядка
 let selectedRow = null;
 $w("#table1").onRowSelect((event) => {
   selectedRow = event.rowData;
 });
 
 // Функція для завантаження працівників із можливістю сортування та пошуку
-function loadWorkers(
-  sortField = "hireDate",
-  sortOrder = "desc",
-  searchValue = ""
-) {
+function loadWorkers(sortField = "", sortOrder = "", searchValue = "") {
   let query = wixData.query("Worker");
 
-  // Налаштування сортування
-  if (sortOrder === "asc") {
+  if (sortField && sortOrder === "asc") {
     query = query.ascending(sortField);
-  } else {
+  } else if (sortField && sortOrder === "desc") {
     query = query.descending(sortField);
   }
 
