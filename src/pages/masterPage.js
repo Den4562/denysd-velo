@@ -1,10 +1,13 @@
-// API Reference: https://www.wix.com/velo/reference/api-overview/introduction
-// “Hello, World!” Example: https://learn-code.wix.com/en/article/hello-world
+import wixData from "wix-data";
 
-$w.onReady(function () {
-    // Write your JavaScript here
+export function Employees_beforeInsert(item, context) {
+  item.salary = item.hoursPerMonth * item.hourlyRate;
+  return item;
+}
 
-    // To select an element by ID use: $w('#elementID')
-
-    // Click 'Preview' to run your code
-});
+// Хук перед оновленням запису
+export function Employees_beforeUpdate(item, context) {
+  item.salary = item.hoursPerMonth * item.hourlyRate;
+  return item;
+}
+$w.onReady(function () {});
