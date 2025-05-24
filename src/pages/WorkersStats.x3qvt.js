@@ -32,6 +32,7 @@ $w.onReady(function () {
       });
   });
 
+  // Обработчики для кнопок сортировки
   $w("#buttonSortByDate").onClick(() => {
     loadWorkers("hireDate", "desc");
   });
@@ -39,15 +40,95 @@ $w.onReady(function () {
   $w("#buttonSortByAge").onClick(() => {
     loadWorkers("age", "asc");
   });
+
+  // Обработчик для поиска в реальном времени
+  $w("#inpSearch").onInput((event) => {
+    const searchValue = $w("#inpSearch").value.trim();
+    loadWorkers("hireDate", "desc", searchValue);
+  });
+
+  // Обробник для кнопки редагування
+  $w("#editButton").onClick(() => {
+    // Перевіряємо, чи вибрана строка
+    if (selectedRow) {
+      // Отримуємо значення з текстових полів
+      const hoursMonthValue = $w("#hoursMonth").value.trim();
+      const hoursRateValue = $w("#hoursRate").value.trim();
+
+      // Змінна для перевірки, чи є що оновлювати
+      let hasUpdates = false;
+
+      // Перевіряємо і оновлюємо hoursPerMonth, якщо значення введено
+      if (hoursMonthValue !== "") {
+        const newHours = Number(hoursMonthValue);
+        if (!isNaN(newHours)) {
+          selectedRow.hoursPerMonth = newHours;
+          hasUpdates = true;
+        } else {
+          console.error("Введіть коректне число у поле #hoursMonth");
+        }
+      }
+
+      // Перевіряємо і оновлюємо hourlyRate, якщо значення введено
+      if (hoursRateValue !== "") {
+        const newHourlyRate = Number(hoursRateValue);
+        if (!isNaN(newHourlyRate)) {
+          selectedRow.hourlyRate = newHourlyRate;
+          hasUpdates = true;
+        } else {
+          console.error("Введіть коректне число у поле #hoursRate");
+        }
+      }
+
+      // Якщо є що оновлювати, викликаємо update
+      if (hasUpdates) {
+        wixData
+          .update("Worker", selectedRow)
+          .then(() => {
+            // Перезавантажуємо таблицю після оновлення
+            loadWorkers();
+            // Очищаємо лише ті поля, які були змінені
+            if (hoursMonthValue !== "") $w("#hoursMonth").value = "";
+            if (hoursRateValue !== "") $w("#hoursRate").value = "";
+          })
+          .catch((err) => {
+            console.error("Помилка оновлення запису:", err);
+          });
+      } else {
+        console.log("Немає змін для оновлення");
+      }
+    } else {
+      console.error("Спочатку виберіть рядок у таблиці");
+    }
+  });
 });
 
-function loadWorkers(sortField = "hireDate", sortOrder = "desc") {
+// Переменная для хранения выбранной строки
+let selectedRow = null;
+
+// Обработчик выбора строки в таблице
+$w("#table1").onRowSelect((event) => {
+  selectedRow = event.rowData; // Сохраняем данные выбранной строки
+});
+
+function loadWorkers(
+  sortField = "hireDate",
+  sortOrder = "desc",
+  searchValue = ""
+) {
   let query = wixData.query("Worker");
 
   if (sortOrder === "asc") {
     query = query.ascending(sortField);
   } else {
     query = query.descending(sortField);
+  }
+
+  if (searchValue) {
+    query = query
+      .contains("firstName", searchValue)
+      .or(query.contains("lastName", searchValue))
+      .or(query.contains("position", searchValue));
   }
 
   query

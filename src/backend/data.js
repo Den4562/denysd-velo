@@ -2,38 +2,32 @@ import wixData from "wix-data";
 
 // Хук перед добавлением записи
 export function Worker_beforeInsert(item, context) {
-  console.log("Before Insert - Item:", item);
+  // Проверяем, что hoursPerMonth и hourlyRate - числа и не undefined/null
   if (
     typeof item.hoursPerMonth === "number" &&
-    typeof item.hourlyRate === "number"
+    typeof item.hourlyRate === "number" &&
+    item.hoursPerMonth != null &&
+    item.hourlyRate != null
   ) {
     item.salary = item.hoursPerMonth * item.hourlyRate;
   } else {
-    console.warn(
-      "Некорректные данные для расчета salary:",
-      item.hoursPerMonth,
-      item.hourlyRate
-    );
-    item.salary = 0;
+    item.salary = 0; // Значение по умолчанию при некорректных данных
   }
   return item;
 }
 
 // Хук перед обновлением записи
 export function Worker_beforeUpdate(item, context) {
-  console.log("Before Update - Item:", item);
+  // Проверяем, что hoursPerMonth и hourlyRate - числа и не undefined/null
   if (
     typeof item.hoursPerMonth === "number" &&
-    typeof item.hourlyRate === "number"
+    typeof item.hourlyRate === "number" &&
+    item.hoursPerMonth != null &&
+    item.hourlyRate != null
   ) {
     item.salary = item.hoursPerMonth * item.hourlyRate;
   } else {
-    console.warn(
-      "Некорректные данные для расчета salary:",
-      item.hoursPerMonth,
-      item.hourlyRate
-    );
-    item.salary = 0;
+    item.salary = 0; // Значение по умолчанию при некорректных данных
   }
   return item;
 }
