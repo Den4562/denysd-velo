@@ -1,17 +1,5 @@
 import wixData from "wix-data";
 
-// Хук перед добавлением записи
-export function Worker_beforeInsert(item, context) {
-  item.salary = item.hoursPerMonth * item.hourlyRate;
-  return item;
-}
-
-// Хук перед обновлением записи
-export function Worker_beforeUpdate(item, context) {
-  item.salary = item.hoursPerMonth * item.hourlyRate;
-  return item;
-}
-
 $w.onReady(function () {
   loadWorkers();
 
@@ -21,12 +9,16 @@ $w.onReady(function () {
     const newWorker = {
       firstName: $w("#inpFirstName").value,
       lastName: $w("#inpLastName").value,
-      age: Number($w("#inpAge").value), // Преобразуем в число
+      age: Number($w("#inpAge").value),
       position: $w("#inpPosition").value,
-      hoursPerMonth: Number($w("#inpHoursPerMonth").value), // Преобразуем в число
-      hourlyRate: Number($w("#inpHourlyRate").value), // Преобразуем в число
-      hireDate: new Date($w("#inpHireDate").value), // Преобразуем в дату
+      hoursPerMonth: Number($w("#inpHoursPerMonth").value),
+      hourlyRate: Number($w("#inpHourlyRate").value),
+      hireDate: $w("#inpHireDate").value
+        ? new Date($w("#inpHireDate").value)
+        : new Date(), // Если дата пустая, ставим текущую
     };
+
+    console.log("Добавляем сотрудника:", newWorker); // Логируем данные перед отправкой
 
     // Добавляем новую запись в коллекцию Worker
     wixData
@@ -34,6 +26,15 @@ $w.onReady(function () {
       .then(() => {
         console.log("Сотрудник успешно добавлен!");
         loadWorkers(); // Обновляем таблицу
+
+        // Очищаем поля формы
+        $w("#inpFirstName").value = "";
+        $w("#inpLastName").value = "";
+        $w("#inpAge").value = "";
+        $w("#inpPosition").value = "";
+        $w("#inpHoursPerMonth").value = "";
+        $w("#inpHourlyRate").value = "";
+        // $w("#inpHireDate").value = "";
       })
       .catch((err) => {
         console.error("Ошибка добавления сотрудника:", err);
