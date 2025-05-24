@@ -1,8 +1,7 @@
 import wixData from "wix-data";
 
-// Хук перед добавлением записи
+// Хук для обчислення зарплати перед додаванням нового запису
 export function Worker_beforeInsert(item, context) {
-  // Проверяем, что hoursPerMonth и hourlyRate - числа и не undefined/null
   if (
     typeof item.hoursPerMonth === "number" &&
     typeof item.hourlyRate === "number" &&
@@ -11,14 +10,13 @@ export function Worker_beforeInsert(item, context) {
   ) {
     item.salary = item.hoursPerMonth * item.hourlyRate;
   } else {
-    item.salary = 0; // Значение по умолчанию при некорректных данных
+    item.salary = 0;
   }
   return item;
 }
 
-// Хук перед обновлением записи
+// Хук для обчислення зарплати перед оновленням запису
 export function Worker_beforeUpdate(item, context) {
-  // Проверяем, что hoursPerMonth и hourlyRate - числа и не undefined/null
   if (
     typeof item.hoursPerMonth === "number" &&
     typeof item.hourlyRate === "number" &&
@@ -27,7 +25,7 @@ export function Worker_beforeUpdate(item, context) {
   ) {
     item.salary = item.hoursPerMonth * item.hourlyRate;
   } else {
-    item.salary = 0; // Значение по умолчанию при некорректных данных
+    item.salary = 0;
   }
   return item;
 }
