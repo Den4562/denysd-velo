@@ -2,7 +2,7 @@ import {
   loadWorkers,
   addWorker,
   updateWorker,
-} from "public/workers-service.js";
+} from "../public/workers-stats/workers-service.js";
 
 import {
   initSort,
@@ -10,7 +10,7 @@ import {
   readForm,
   clearForm,
   updateFields,
-} from "public/workers-event.js";
+} from "../public/workers-stats/workers-event.js";
 
 let selectedRow = null;
 
