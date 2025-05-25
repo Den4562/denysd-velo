@@ -1,7 +1,3 @@
-// data.js
-import wixData from "wix-data";
-
-// Допоміжна функція для обчислення зарплати
 function calculateSalary(item) {
   if (
     typeof item.hoursPerMonth === "number" &&
