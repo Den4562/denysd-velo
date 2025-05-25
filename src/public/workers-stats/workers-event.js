@@ -1,11 +1,16 @@
 // Ініціалізація сортування та пошуку
 export function initSort($w, refresh) {
+  let sortByDateDesc = "desc"; // Начальное направление для hireDate
+  let sortByAgeAsc = "asc"; // Начальное направление для age
+
   $w("#buttonSortByDate").onClick(() => {
-    refresh("hireDate", "desc");
+    sortByDateDesc = sortByDateDesc === "desc" ? "asc" : "desc";
+    refresh("hireDate", sortByDateDesc);
   });
 
   $w("#buttonSortByAge").onClick(() => {
-    refresh("age", "asc");
+    sortByAgeAsc = sortByAgeAsc === "asc" ? "desc" : "asc";
+    refresh("age", sortByAgeAsc);
   });
 
   $w("#inpSearch").onInput(() => {
