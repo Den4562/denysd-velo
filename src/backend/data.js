@@ -1,31 +1,27 @@
+// data.js
 import wixData from "wix-data";
 
-// Хук для обчислення зарплати перед додаванням нового запису
-export function Worker_beforeInsert(item, context) {
+// Допоміжна функція для обчислення зарплати
+function calculateSalary(item) {
   if (
     typeof item.hoursPerMonth === "number" &&
     typeof item.hourlyRate === "number" &&
     item.hoursPerMonth != null &&
     item.hourlyRate != null
   ) {
-    item.salary = item.hoursPerMonth * item.hourlyRate;
-  } else {
-    item.salary = 0;
+    return item.hoursPerMonth * item.hourlyRate;
   }
+  return 0;
+}
+
+// Хук для обчислення зарплати перед додаванням нового запису
+export function Worker_beforeInsert(item, context) {
+  item.salary = calculateSalary(item);
   return item;
 }
 
 // Хук для обчислення зарплати перед оновленням запису
 export function Worker_beforeUpdate(item, context) {
-  if (
-    typeof item.hoursPerMonth === "number" &&
-    typeof item.hourlyRate === "number" &&
-    item.hoursPerMonth != null &&
-    item.hourlyRate != null
-  ) {
-    item.salary = item.hoursPerMonth * item.hourlyRate;
-  } else {
-    item.salary = 0;
-  }
+  item.salary = calculateSalary(item);
   return item;
 }
