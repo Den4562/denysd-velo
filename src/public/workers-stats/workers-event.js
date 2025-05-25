@@ -1,27 +1,16 @@
 // Ініціалізація сортування та пошуку
 export function initSort($w, refresh) {
-  const sortState = {
-    hireDate: "desc",
-    age: "asc",
-  };
-
   $w("#buttonSortByDate").onClick(() => {
-    const current = sortState.hireDate;
-    const newOrder = current === "asc" ? "desc" : "asc";
-    sortState.hireDate = newOrder;
-    refresh("hireDate", newOrder);
+    refresh("hireDate", "desc");
   });
 
   $w("#buttonSortByAge").onClick(() => {
-    const current = sortState.age;
-    const newOrder = current === "asc" ? "desc" : "asc";
-    sortState.age = newOrder;
-    refresh("age", newOrder);
+    refresh("age", "asc");
   });
 
   $w("#inpSearch").onInput(() => {
-    const search = $w("#inpSearch").value.trim();
-    refresh("", "", search);
+    const value = $w("#inpSearch").value.trim();
+    refresh("", "", value);
   });
 }
 
