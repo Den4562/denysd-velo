@@ -14,6 +14,13 @@ export function initSort($w, refresh) {
   });
 }
 
+// Обробка вибору рядка в таблиці
+export function initSelect($w, onSelect) {
+  $w("#table1").onRowSelect((e) => {
+    onSelect(e.rowData);
+  });
+}
+
 // Зчитування даних з форми працівника
 export function readForm($w) {
   return {
