@@ -1,28 +1,27 @@
 // Ініціалізація сортування та пошуку
 export function initSort($w, refresh) {
-  let sortByDateDesc = "desc"; // Начальное направление для hireDate
-  let sortByAgeAsc = "asc"; // Начальное направление для age
+  const sortState = {
+    hireDate: "desc",
+    age: "asc",
+  };
 
   $w("#buttonSortByDate").onClick(() => {
-    sortByDateDesc = sortByDateDesc === "desc" ? "asc" : "desc";
-    refresh("hireDate", sortByDateDesc);
+    const current = sortState.hireDate;
+    const newOrder = current === "asc" ? "desc" : "asc";
+    sortState.hireDate = newOrder;
+    refresh("hireDate", newOrder);
   });
 
   $w("#buttonSortByAge").onClick(() => {
-    sortByAgeAsc = sortByAgeAsc === "asc" ? "desc" : "asc";
-    refresh("age", sortByAgeAsc);
+    const current = sortState.age;
+    const newOrder = current === "asc" ? "desc" : "asc";
+    sortState.age = newOrder;
+    refresh("age", newOrder);
   });
 
   $w("#inpSearch").onInput(() => {
-    const value = $w("#inpSearch").value.trim();
-    refresh("", "", value);
-  });
-}
-
-// Обробка вибору рядка в таблиці
-export function initSelect($w, onSelect) {
-  $w("#table1").onRowSelect((e) => {
-    onSelect(e.rowData);
+    const search = $w("#inpSearch").value.trim();
+    refresh("", "", search);
   });
 }
 
